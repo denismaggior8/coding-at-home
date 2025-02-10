@@ -1,6 +1,6 @@
 import machine,time
 
-led = machine.Pin(25,machine.Pin.OUT)
+
 
 wpm=15
 CODE = {
@@ -33,26 +33,31 @@ CODE = {
     ' ':' '
 }
 
-def flash(led,t):
-    led.high()
-    time.sleep(t)
-    led.low()
 
-def send(msg="SOS", tdot = 1.2/wpm):
+def flash(led,t):
+    led.on()
+    time.sleep(t)
+    led.off()
+
+
+def send(msg="SOS", pin = 23, tdot = 1.2/wpm):
+    led = machine.Pin(pin,machine.Pin.OUT)
     tdash = tdot * 3
     tspace = tdot * 2
     tword = tdot * 6
-
-    led.low()
+    led.off()
     for l in msg:
         c = CODE.get(l.upper())
         for e in c:
-           if e==".":
-               flash(led,tdot)
-               time.sleep(tdot)
-           if e=="-":
-               flash(led,tdash)
-               time.sleep(tdot)
-           if e==" ": time.sleep(tword)
+            if e==".":
+                flash(led,tdot)
+                time.sleep(tdot)
+            if e=="-":
+                flash(led,tdash)
+                time.sleep(tdot)
+            if e==" ": time.sleep(tword)
         time.sleep(tword)
-    led.low() 
+    led.off() 
+
+
+send("SOS")
